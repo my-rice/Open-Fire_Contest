@@ -1,0 +1,6 @@
+ ,Training Loss,Training Accuracy,Validation Loss,Validation Accuracy
+Mean,0.2022,0.9224,0.3936,0.8562
+Std,0.0078,0.0038,0.1483,0.051
+Min,0.1902,0.9172,0.2219,0.7659
+Max,0.2122,0.9288,0.592,0.916
+Median,0.2021,0.9226,0.3162,0.8714
