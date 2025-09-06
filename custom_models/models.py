@@ -1,5 +1,5 @@
 import torch
-from firenetV2 import FireNetV2
+from .firenetV2 import FireNetV2
 from torchvision.models import resnet50, ResNet50_Weights, resnet18, ResNet18_Weights
 
 def build_MobileNetV3Small(num_outputs=1):
