@@ -9,7 +9,6 @@ from striprtf.striprtf import rtf_to_text
 import albumentations
 
 
-# ha le informazioni legate ad  ogni video, i metadati.
 class VideoRecord(object):
     """
     Helper class for class VideoFrameDataset. This class
@@ -35,7 +34,7 @@ class VideoRecord(object):
 
     @property
     def num_frames(self) -> int:
-        return self.end_frame - self.start_frame + 1  # +1 because end frame is inclusive
+        return self.end_frame - self.start_frame + 1  
 
     @property
     def start_frame(self) -> int:
@@ -54,7 +53,6 @@ class VideoRecord(object):
         else:
             return [int(label_id) for label_id in self._data[3:]]
 
-# Il parametro test_mode serve per rendere non aleatoria l'estrazione dei frame dal segmento, ovvero prendere sempre gli stessi frame serve per la validation
 class VideoFrameDataset(torch.utils.data.Dataset):
     r"""
     A highly efficient and adaptable dataset class for videos.

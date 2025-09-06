@@ -1,21 +1,80 @@
-# Open-Fire_Contest
-In train.ipynb the code is organised in such a way that at the beginning there are sections of code common to all trainings related to downloading and decompressing videos, a section to extract frames at a specific frame rate from the videos, a section to create the dataset from the frames. Other common code sections are functions to start and configure the Tensorboard and functions to perform K-fold cross-validation. 
+<div align="center">
 
-Then, there is the code sections specific to each training. In each section there is the code to create the model, code to configure the training parameters, code to train the model and code to save the training data.
+# ONFIRE Contest 2023 – Early Fire Detection from Video
 
-I trained several models, each in a different code section (I named these sections with "Attempt x: ModelName", where I specify which neural network architecture was used for the training). The proposed models are as follows:
- - Attempt 1: MobileNetV2
- - Attempt 2: MobileNetV3Small
- - Attempt 3: ResNet50
- - Attempt 4: FireNetV2
- - Attempt 5: ResNet18
+Lightweight, modular PyTorch pipeline for rapid wildfire / smoke onset detection in surveillance video streams. Originally built for the 2023 **ONFIRE (Open Fire) Contest**.
 
-In order to test the models produced by the training, I created a test.py script which, after choosing the neural network model to be used, classifies the videos as FIRE or NOFIRE and places the results in the specified folder on the command line.
+</div>
 
-In order to obtain metrics characterising the performance of a model, I created the metrics.py script, which interprets the results produced by test.py and produces useful information (accuracy, precision, recall, etc.) to assess the network's performance.
+---
 
-The model.py file facilitates the configuration of the neural network, allowing a pre-trained model to be instantiated where needed.
+## 🔥 Key Features
+* Multiple CNN backbones: FireNet, FireNetV2, MobileNetV2, MobileNetV3 Small, ResNet18, ResNet50.
+* Frame-level sparse temporal sampling with segment-based dataset loader.
+* K-fold cross validation utilities (implemented inside `train.ipynb`).
+* Unified metrics (precision, recall, accuracy, delay & normalized delay).
+* Training / validation curve aggregation and plotting from raw TensorBoard event exports.
+* Inference script (`test.py`) for test set video evaluation.
+* CSV summarization + aggregated statistics per experiment.
 
-The files firenet.py and firenetV2.py implement two different neural network architectures.
+---
 
-Finally, converter.py is a file that enables the conversion of videos in .avi format to .mp4 format (used to convert videos for the test set).
+## 🏗 Project Structure (Refactored)
+```
+scripts/
+    summary.py           # Fold aggregation (mean/std/min/max/median)
+    plots.py             # fold plot generator
+    to_csv.py            # event export → CSV
+    converter.py         # .avi → .mp4 helper (ffmpeg wrapper)
+    graphs.py            # Plot training vs validation curves from CSV logs
+    metrics.py           # Evaluation utilities (callable functions)
+custom_models/
+    FireNet.py          # Original Keras → PyTorch port
+    FireNetV2.py        # Improved FireNetV2 architecture
+    models.py           # Generic builders and optimizer helpers
+best_model/
+    best_model.pth      # Best model weights (MobileNetV3)
+train.ipynb             # End‑to‑end training workflow (data prep → K-fold training)
+test.ipynb              # Inference / result generation
+
+```
+
+---
+
+## 🚀 Quick Start
+### 1. Install Dependencies
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Prepare Data
+Extract frames & annotations as per contest specification. Frame extraction & dataset assembly utilities are inside the initial cells of `train.ipynb` (sections: download → extract → dataset build).
+
+### 3. Train Models
+Open `train.ipynb` and run sequentially. Each attempt section ("Attempt X: ModelName") defines:
+* Model instantiation
+* Optimizer / scheduler setup
+* K-fold loop
+* Logging to TensorBoard
+
+---
+
+## 📊 Metrics Implemented
+* TP / TN / FP / FN
+* Accuracy, Precision, Recall
+* Average Delay (frames)
+* Normalized Average Delay (rewarding early detection)
+
+Delay is computed only on true positives; early guesses before allowed tolerance (`delta_t`) count as false positives.
+
+---
+
+## 🧪 K-Fold Strategy
+Implemented manually inside notebook; each fold logs separate TensorBoard scalars which are post-processed into CSV → summary stats.
+
+---
+
+## 📚 Dependencies
+See `requirements.txt` for a concrete list of dependencies.
+

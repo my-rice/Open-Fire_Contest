@@ -1,0 +1,10 @@
+torch
+torchvision
+albumentations
+striprtf
+pandas
+matplotlib
+keras
+numpy
+opencv-python
+torchinfo
